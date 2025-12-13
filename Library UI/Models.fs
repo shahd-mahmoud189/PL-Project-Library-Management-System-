@@ -20,4 +20,4 @@ type Book(id:int, title:string, author:string, status:BookStatus) =
     member val Id = id with get, set 
     member val Title = title with get, set 
     member val Author = author with get, set 
-    member val Status = status with get, set
+    member val Status = status with get, set 

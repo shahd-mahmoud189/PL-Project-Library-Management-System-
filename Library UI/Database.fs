@@ -128,4 +128,4 @@ module Database =
             "UPDATE BorrowedBooks SET ReturnDate=GETDATE() WHERE UserId=@u AND BookId=@b AND ReturnDate IS NULL", conn)
         cmd.Parameters.AddWithValue("@u", userId) |> ignore
         cmd.Parameters.AddWithValue("@b", bookId) |> ignore
-        cmd.ExecuteNonQuery() |> ignore
+        cmd.ExecuteNonQuery() |> ignore       // cmd.ExecuteNonQuery() |> ignore
