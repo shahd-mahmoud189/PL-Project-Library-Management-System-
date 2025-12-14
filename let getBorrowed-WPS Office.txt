@@ -1,0 +1,34 @@
+﻿let getBorrowedCountByUser (userId:int) =
+    use conn = new SqlConnection(connectionString)
+    conn.Open()
+    let cmd = new SqlCommand(
+        "SELECT COUNT(*) FROM BorrowedBooks WHERE UserId=@u AND ReturnDate IS NULL", conn)
+    cmd.Parameters.AddWithValue("@u", userId) |> ignore
+    cmd.ExecuteScalar() :?> int
+
+let isBookBorrowedByUser (userId:int) (bookId:int) =
+    use conn = new SqlConnection(connectionString)
+    conn.Open()
+    let cmd = new SqlCommand(
+        "SELECT COUNT(*) FROM BorrowedBooks WHERE UserId=@u AND BookId=@b AND ReturnDate IS NULL", conn)
+    cmd.Parameters.AddWithValue("@u", userId) |> ignore
+    cmd.Parameters.AddWithValue("@b", bookId) |> ignore
+    (cmd.ExecuteScalar() :?> int) > 0
+
+let borrowBook (userId:int) (bookId:int) =
+    use conn = new SqlConnection(connectionString)
+    conn.Open()
+    let cmd = new SqlCommand(
+        "INSERT INTO BorrowedBooks (UserId, BookId, BorrowDate) VALUES (@u,@b,GETDATE())", conn)
+    cmd.Parameters.AddWithValue("@u", userId) |> ignore
+    cmd.Parameters.AddWithValue("@b", bookId) |> ignore
+    cmd.ExecuteNonQuery() |> ignore
+
+let returnBook (userId:int) (bookId:int) =
+    use conn = new SqlConnection(connectionString)
+    conn.Open()
+    let cmd = new SqlCommand(
+        "UPDATE BorrowedBooks SET ReturnDate=GETDATE() WHERE UserId=@u AND BookId=@b AND ReturnDate IS NULL", conn)
+    cmd.Parameters.AddWithValue("@u", userId) |> ignore
+    cmd.Parameters.AddWithValue("@b", bookId) |> ignore
+    cmd.ExecuteNonQuery() |> ignore
